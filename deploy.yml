@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # যখনই main ব্রাঞ্চে কোড পুশ করবেন, এটি রান হবে
+      - main
 
 jobs:
   deploy:
@@ -18,11 +18,11 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ 44.220.82.149 }}        # সার্ভারের পাবলিক IP
-          username: ${{ ubuntu }}    # সাধারণত 'ubuntu'
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # আপনার .pem ফাইলের কন্টেন্ট
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/app  # সার্ভারে যে ফোল্ডারে কোড রাখবেন
+            cd ~/app  # সতর্কতা: এখানে সার্ভারের ফোল্ডারের নাম সঠিক আছে কিনা চেক করুন
             git pull origin main
             npm install
             pm2 restart server
