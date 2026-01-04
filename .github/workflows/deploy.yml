@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ১. কোডটি GitHub থেকে ডাউনলোড করা
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # ২. EC2 সার্ভারে কানেক্ট করা এবং কমান্ড রান করা
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/app  # সতর্কতা: এখানে সার্ভারের ফোল্ডারের নাম সঠিক আছে কিনা চেক করুন
+            git pull origin main
+            npm install
+            pm2 restart server
