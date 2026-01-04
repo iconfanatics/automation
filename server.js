@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello version 2 from AWS EC2! This is deployed via GitHub Actions.');
+  res.send('Hello version Momin from AWS EC2! This is deployed via GitHub Actions.');
 });
 
 app.listen(port, () => {
