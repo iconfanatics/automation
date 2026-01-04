@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # যখনই main ব্রাঞ্চে কোড পুশ করবেন, এটি রান হবে
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ১. কোডটি GitHub থেকে ডাউনলোড করা
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # ২. EC2 সার্ভারে কানেক্ট করা এবং কমান্ড রান করা
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ 44.220.82.149 }}        # সার্ভারের পাবলিক IP
+          username: ${{ ubuntu }}    # সাধারণত 'ubuntu'
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # আপনার .pem ফাইলের কন্টেন্ট
+          script: |
+            cd ~/app  # সার্ভারে যে ফোল্ডারে কোড রাখবেন
+            git pull origin main
+            npm install
+            pm2 restart server
